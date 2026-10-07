@@ -11,8 +11,9 @@
     "doctor": "expo install --check"
   },
   "dependencies": {
-    "@expo-google-fonts/ibm-plex-mono": "^0.4.1",
-    "@expo-google-fonts/newsreader": "^0.4.1",
+    "@expo-google-fonts/bricolage-grotesque": "^0.4.1",
+    "@expo-google-fonts/geist": "^0.4.1",
+    "@expo-google-fonts/geist-mono": "^0.4.1",
     "@vantage/core": "workspace:*",
     "@vantage/tokens": "workspace:*",
     "expo": "~57.0.17",

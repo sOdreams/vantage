@@ -1,7 +1,14 @@
 import SunCalc from 'suncalc';
 import { describe, expect, it } from 'vitest';
 import { lisbon } from './sample/lisbon';
-import { daySentence, formatDay, formatTime, lightPhrase, nextLightWindow } from './sun';
+import {
+  bestWindowText,
+  formatDay,
+  formatTime,
+  lightChip,
+  lightPhrase,
+  nextLightWindow,
+} from './sun';
 
 // 7 Oct 2026, 12:00 in Lisbon (UTC+1 in October).
 const NOON = new Date('2026-10-07T11:00:00Z');
@@ -72,22 +79,42 @@ describe('lightPhrase', () => {
   });
 });
 
-describe('daySentence', () => {
-  it('leads to golden hour in the afternoon', () => {
-    const s = daySentence(at(t.goldenHour, -37), lisbon);
-    expect(s).toEqual({
-      before: 'Golden hour at ',
-      time: formatTime(t.goldenHour, lisbon.timeZone),
-      after: ', in 37 minutes.',
+describe('lightChip', () => {
+  it('counts down to golden hour', () => {
+    expect(lightChip(at(t.goldenHour, -37), lisbon)).toEqual({
+      text: 'Golden hour in 37 min',
+      active: false,
     });
   });
 
-  it('drops the countdown when golden hour is hours away', () => {
-    expect(daySentence(NOON, lisbon).after).toBe('.');
+  it('gives a clock time when golden hour is hours away', () => {
+    expect(lightChip(NOON, lisbon).text).toBe(
+      `Golden hour ${formatTime(t.goldenHour, lisbon.timeZone)}`,
+    );
   });
 
-  it('covers blue hour and night', () => {
-    expect(daySentence(at(t.sunset, 5), lisbon).before).toBe('Blue hour now, until ');
-    expect(daySentence(at(t.dusk, 60), lisbon).before).toBe('Night. First light at ');
+  it('is active during golden and blue hour', () => {
+    expect(lightChip(at(t.goldenHour, 5), lisbon)).toEqual({ text: 'Golden hour now', active: true });
+    expect(lightChip(at(t.sunset, 5), lisbon)).toEqual({ text: 'Blue hour now', active: true });
+  });
+
+  it('points to the next sunrise at night', () => {
+    expect(lightChip(at(t.dusk, 60), lisbon).text).toMatch(/^Sunrise \d\d:\d\d$/);
+  });
+});
+
+describe('bestWindowText', () => {
+  it('gives the range today', () => {
+    const w = nextLightWindow('golden-evening', NOON, lisbon);
+    const tz = lisbon.timeZone;
+    expect(bestWindowText(w, NOON, lisbon)).toBe(
+      `Best ${formatTime(t.goldenHour, tz)}–${formatTime(t.sunset, tz)}`,
+    );
+  });
+
+  it('says now while it lasts', () => {
+    const now = at(t.goldenHour, 5);
+    const w = nextLightWindow('golden-evening', now, lisbon);
+    expect(bestWindowText(w, now, lisbon)).toBe(`Best now until ${formatTime(t.sunset, lisbon.timeZone)}`);
   });
 });

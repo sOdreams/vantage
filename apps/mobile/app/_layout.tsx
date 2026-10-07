@@ -1,14 +1,14 @@
 import {
-  IBMPlexMono_400Regular,
-  IBMPlexMono_400Regular_Italic,
-  IBMPlexMono_500Medium,
-} from '@expo-google-fonts/ibm-plex-mono';
+  BricolageGrotesque_700Bold,
+  BricolageGrotesque_800ExtraBold,
+} from '@expo-google-fonts/bricolage-grotesque';
 import {
-  Newsreader_300Light,
-  Newsreader_400Regular,
-  Newsreader_400Regular_Italic,
-  Newsreader_500Medium,
-} from '@expo-google-fonts/newsreader';
+  Geist_400Regular,
+  Geist_500Medium,
+  Geist_600SemiBold,
+  Geist_700Bold,
+} from '@expo-google-fonts/geist';
+import { GeistMono_400Regular, GeistMono_500Medium } from '@expo-google-fonts/geist-mono';
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
@@ -27,16 +27,16 @@ function ThemedStack() {
 
   useEffect(() => {
     // Root view colour shows during transitions and behind the keyboard.
-    SystemUI.setBackgroundColorAsync(palette.ground).catch(() => {});
-  }, [palette.ground]);
+    SystemUI.setBackgroundColorAsync(palette.bg).catch(() => {});
+  }, [palette.bg]);
 
   return (
     <>
-      <StatusBar style={name === 'darkroom' ? 'light' : 'dark'} />
+      <StatusBar style={name === 'dark' ? 'light' : 'dark'} />
       <Stack
         screenOptions={{
           headerShown: false,
-          contentStyle: { backgroundColor: palette.ground },
+          contentStyle: { backgroundColor: palette.bg },
           animation: 'fade',
         }}
       />
@@ -46,13 +46,14 @@ function ThemedStack() {
 
 export default function RootLayout() {
   const [loaded, error] = useFonts({
-    Newsreader_300Light,
-    Newsreader_400Regular,
-    Newsreader_400Regular_Italic,
-    Newsreader_500Medium,
-    IBMPlexMono_400Regular,
-    IBMPlexMono_400Regular_Italic,
-    IBMPlexMono_500Medium,
+    BricolageGrotesque_700Bold,
+    BricolageGrotesque_800ExtraBold,
+    Geist_400Regular,
+    Geist_500Medium,
+    Geist_600SemiBold,
+    Geist_700Bold,
+    GeistMono_400Regular,
+    GeistMono_500Medium,
   });
 
   useEffect(() => {

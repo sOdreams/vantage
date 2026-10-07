@@ -6,7 +6,7 @@
     "version": "0.1.0",
     "orientation": "portrait",
     "userInterfaceStyle": "automatic",
-    "backgroundColor": "#0E0D0B",
+    "backgroundColor": "#0B0C0F",
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "com.sodreams.vantage"
@@ -21,9 +21,9 @@
       [
         "expo-splash-screen",
         {
-          "backgroundColor": "#F1EEE7",
+          "backgroundColor": "#F3F4F6",
           "dark": {
-            "backgroundColor": "#0E0D0B"
+            "backgroundColor": "#0B0C0F"
           }
         }
       ]

@@ -1,7 +1,7 @@
-/** The three ways to read the map. Only one is shown at a time. */
-export type Lens = 'light' | 'crowd' | 'safety';
+/** The three ways to filter the map, as a segmented control. */
+export type Filter = 'popular' | 'quiet' | 'gems';
 
-/** 0 quiet, 1 moderate, 2 busy. Drawn as an empty, half or full circle. */
+/** 0 quiet, 1 moderate, 2 busy. Blue, yellow, red. */
 export type CrowdLevel = 0 | 1 | 2;
 
 /** When a spot photographs best. */
@@ -17,22 +17,22 @@ export type City = {
 };
 
 export type Spot = {
-  /** Two-digit number shown on the map, e.g. "01". */
   id: string;
   name: string;
   area: string;
-  /** Position on the city plate, in the 390 × 844 design frame. */
+  /** Position on the drawn city map, in its 390 × 560 frame. */
   x: number;
   y: number;
-  /** Added by a member rather than a well-known spot. Shown in italics. */
+  /** Added by a member rather than a well-known spot. Drawn as a diamond. */
   gem: boolean;
   light: LightKind;
   crowd: CrowdLevel;
   /** Rough head count right now. */
   people: number;
-  /** A reason not to go today (closure, weather). Shown in the accent colour. */
+  /** Average member rating, 1–5. */
+  rating: number;
+  /** Short closure text, e.g. "Partly closed". Shown as a red badge. */
+  closure?: string;
+  /** A reason not to go today, e.g. "Gusts 72 km/h". */
   risk?: string;
-  dek: string;
 };
-
-export type Tone = 'ink' | 'ink2' | 'dim' | 'accent';

@@ -89,32 +89,33 @@ export function lightPhrase(kind: LightKind, w: LightWindow, now: Date, city: Ci
   return sameCityDay(w.start, now, city.timeZone) ? `${label} at ${at}` : `${label} tomorrow at ${at}`;
 }
 
-/** The masthead sentence, split so the time can be underlined and tapped. */
-export type DaySentence = { before: string; time: string; after: string };
+/** The amber chip at the top of the map: what the light is doing in the city. */
+export type LightChip = { text: string; active: boolean };
 
-export function daySentence(now: Date, city: City): DaySentence {
+export function lightChip(now: Date, city: City): LightChip {
   const tz = city.timeZone;
   const t = timesFor(now, city);
-  const inMinutes = (d: Date) => {
-    const m = minutesUntil(d, now);
-    return m < 120 ? `, in ${m} ${m === 1 ? 'minute' : 'minutes'}.` : '.';
-  };
 
-  if (now < t.dawn) {
-    return { before: 'Night. First light at ', time: formatTime(t.dawn, tz), after: '.' };
-  }
-  if (now < t.goldenHourEnd) {
-    return { before: 'Morning light now, until ', time: formatTime(t.goldenHourEnd, tz), after: '.' };
-  }
+  if (now < t.dawn) return { text: `Sunrise ${formatTime(t.sunrise, tz)}`, active: false };
+  if (now < t.goldenHourEnd) return { text: 'Morning light now', active: true };
   if (now < t.goldenHour) {
-    return { before: 'Golden hour at ', time: formatTime(t.goldenHour, tz), after: inMinutes(t.goldenHour) };
+    const m = minutesUntil(t.goldenHour, now);
+    return {
+      text: m < 120 ? `Golden hour in ${m} min` : `Golden hour ${formatTime(t.goldenHour, tz)}`,
+      active: false,
+    };
   }
-  if (now < t.sunset) {
-    return { before: 'Golden hour now, until sunset at ', time: formatTime(t.sunset, tz), after: '.' };
-  }
-  if (now < t.dusk) {
-    return { before: 'Blue hour now, until ', time: formatTime(t.dusk, tz), after: '.' };
-  }
+  if (now < t.sunset) return { text: 'Golden hour now', active: true };
+  if (now < t.dusk) return { text: 'Blue hour now', active: true };
   const tomorrow = timesFor(new Date(now.getTime() + DAY), city);
-  return { before: 'Night. First light at ', time: formatTime(tomorrow.dawn, tz), after: '.' };
+  return { text: `Sunrise ${formatTime(tomorrow.sunrise, tz)}`, active: false };
+}
+
+/** "Best 18:37–19:12", "Best now until 19:12", "Best tomorrow 07:41–08:20". */
+export function bestWindowText(w: LightWindow, now: Date, city: City): string {
+  const tz = city.timeZone;
+  const end = formatTime(w.end, tz);
+  if (w.active) return `Best now until ${end}`;
+  const range = `${formatTime(w.start, tz)}–${end}`;
+  return sameCityDay(w.start, now, tz) ? `Best ${range}` : `Best tomorrow ${range}`;
 }
