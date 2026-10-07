@@ -1,4 +1,6 @@
 import {
+  type MapPalette,
+  mapPalettes,
   type Palette,
   palettes,
   resolveTheme,
@@ -13,6 +15,7 @@ export type { ThemePreference };
 type ThemeContextValue = {
   name: ThemeName;
   palette: Palette;
+  map: MapPalette;
   preference: ThemePreference;
   setPreference: (preference: ThemePreference) => void;
 };
@@ -25,7 +28,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 
   const value = useMemo<ThemeContextValue>(() => {
     const name = resolveTheme(preference, scheme);
-    return { name, palette: palettes[name], preference, setPreference };
+    return { name, palette: palettes[name], map: mapPalettes[name], preference, setPreference };
   }, [preference, scheme]);
 
   return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;

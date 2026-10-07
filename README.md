@@ -8,7 +8,8 @@ A pnpm + Turborepo monorepo:
 apps/
   mobile/            Expo (SDK 57) app, Expo Router, runs in Expo Go
 packages/
-  tokens/            design tokens: Darkroom/Gallery palettes, type, spacing (+ tests)
+  core/              app logic with no UI: spots, filters, sun times (+ tests)
+  tokens/            design tokens: dark/light palettes, fonts, spacing (+ tests)
   config/            shared TypeScript config
 docs/adr/            architecture decisions
 .github/workflows/   CI: lint, typecheck, tests, iOS bundle
@@ -70,7 +71,7 @@ pnpm --filter mobile start:tunnel
 ```bash
 pnpm lint          # Biome
 pnpm typecheck     # TypeScript, all packages
-pnpm test          # Vitest (tokens: contrast + theme logic)
+pnpm test          # Vitest (core: filters + sun times; tokens: contrast + themes)
 pnpm --filter mobile doctor   # checks package versions match Expo SDK 57
 pnpm format        # auto-format everything
 ```
@@ -79,13 +80,14 @@ CI runs lint, typecheck, tests and an iOS bundle on every pull request.
 
 ## Design rules
 
-- Two themes: **Darkroom** (dark) and **Gallery** (light). Follows the phone by default.
-- Newsreader for reading, IBM Plex Mono for captions and data.
-- Zero corner radius, 1px hairlines, no cards or shadows.
-- One accent colour, used only for warnings.
+- "Night viewfinder": dark first, light theme follows the phone.
+- Bricolage Grotesque for titles, Geist for text, Geist Mono for times and data.
+- Amber is reserved for the main action and golden-hour data.
+- Crowd colours are fixed everywhere: blue quiet, yellow moderate, red busy.
+  Hidden gems are violet diamonds.
 
 All values live in `packages/tokens`. Tests fail if any text colour drops below
-WCAG AA contrast on its background.
+WCAG AA contrast on the surface it sits on.
 
 ## Why Expo Go only
 

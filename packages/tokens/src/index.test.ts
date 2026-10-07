@@ -3,6 +3,7 @@ import {
   contrastRatio,
   contrastRequirements,
   hexToRgb,
+  mapPalettes,
   palettes,
   resolveTheme,
   type ThemeName,
@@ -15,7 +16,7 @@ describe('contrastRatio', () => {
   });
 
   it('is symmetric', () => {
-    expect(contrastRatio('#0E0D0B', '#ECE8DF')).toBeCloseTo(contrastRatio('#ECE8DF', '#0E0D0B'), 10);
+    expect(contrastRatio('#0B0C0F', '#F2EFE9')).toBeCloseTo(contrastRatio('#F2EFE9', '#0B0C0F'), 10);
   });
 
   it('rejects malformed colours', () => {
@@ -28,33 +29,33 @@ describe('palettes', () => {
   const themes = Object.keys(palettes) as ThemeName[];
 
   for (const theme of themes) {
-    for (const [token, min] of Object.entries(contrastRequirements)) {
-      it(`${theme}.${token} keeps at least ${min}:1 on the ground`, () => {
+    for (const { token, on, min } of contrastRequirements) {
+      it(`${theme}: ${token} on ${on} keeps at least ${min}:1`, () => {
         const p = palettes[theme];
-        const ratio = contrastRatio(p[token as keyof typeof contrastRequirements], p.ground);
-        expect(ratio).toBeGreaterThanOrEqual(min);
+        expect(contrastRatio(p[token], p[on])).toBeGreaterThanOrEqual(min);
       });
     }
   }
 
   it('both themes define the same tokens', () => {
-    expect(Object.keys(palettes.darkroom).sort()).toEqual(Object.keys(palettes.gallery).sort());
+    expect(Object.keys(palettes.dark).sort()).toEqual(Object.keys(palettes.light).sort());
+    expect(Object.keys(mapPalettes.dark).sort()).toEqual(Object.keys(mapPalettes.light).sort());
   });
 });
 
 describe('resolveTheme', () => {
   it('follows the phone when set to system', () => {
-    expect(resolveTheme('system', 'light')).toBe('gallery');
-    expect(resolveTheme('system', 'dark')).toBe('darkroom');
+    expect(resolveTheme('system', 'light')).toBe('light');
+    expect(resolveTheme('system', 'dark')).toBe('dark');
   });
 
-  it('defaults to darkroom when the phone gives no preference', () => {
-    expect(resolveTheme('system', null)).toBe('darkroom');
-    expect(resolveTheme('system', 'unspecified')).toBe('darkroom');
+  it('defaults to dark when the phone gives no preference', () => {
+    expect(resolveTheme('system', null)).toBe('dark');
+    expect(resolveTheme('system', 'unspecified')).toBe('dark');
   });
 
   it('respects an explicit choice', () => {
-    expect(resolveTheme('gallery', 'dark')).toBe('gallery');
-    expect(resolveTheme('darkroom', 'light')).toBe('darkroom');
+    expect(resolveTheme('light', 'dark')).toBe('light');
+    expect(resolveTheme('dark', 'light')).toBe('dark');
   });
 });

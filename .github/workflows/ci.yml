@@ -32,8 +32,9 @@ jobs:
             pnpm install --no-frozen-lockfile
           fi
 
+      # The github reporter turns each problem into an annotation on the PR.
       - name: Lint
-        run: pnpm lint
+        run: pnpm exec biome lint --reporter=github .
 
       - name: Typecheck
         run: pnpm typecheck
