@@ -30,6 +30,9 @@ function useNow(intervalMs = 30_000): Date {
   return now;
 }
 
+/** Day 2 shows one city. Search (Day 3) and real data (Day 5) make this a choice. */
+const city = lisbon;
+
 const tap = () => Haptics.selectionAsync().catch(() => {});
 
 /**
@@ -46,8 +49,7 @@ export function AtlasScreen() {
   const [lens, setLens] = useState<Lens>('light');
   const [selectedId, setSelectedId] = useState<string | undefined>();
 
-  const city = lisbon;
-  const rows = useMemo(() => spotLight(lisbonSpots, now, city), [now, city]);
+  const rows = useMemo(() => spotLight(lisbonSpots, now, city), [now]);
   const lead = leadFor(rows, lens, now, city, selectedId);
   const sentence = daySentence(now, city);
   const caption = `${formatDay(now, city.timeZone)} · ${city.lat.toFixed(2)}° N`;
