@@ -2,7 +2,7 @@ import type { Filter, LightChip } from '@vantage/core';
 import { fonts, radius } from '@vantage/tokens';
 import { Pressable, Text, View } from 'react-native';
 import { useTheme } from '@/theme/ThemeProvider';
-import { BellIcon, PinIcon, SearchIcon, SunsetIcon } from './icons';
+import { BellIcon, PinIcon, SearchIcon, SunsetIcon } from '@/ui/icons';
 
 const FILTERS: { value: Filter; label: string }[] = [
   { value: 'popular', label: 'Popular' },

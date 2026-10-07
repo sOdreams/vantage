@@ -52,6 +52,25 @@ export type Palette = {
   goldBg: string;
   goldBorder: string;
   goldText: string;
+  /** "open", "safe to go", "worth it" */
+  ok: string;
+  okText: string;
+  okBg: string;
+  okBorder: string;
+  /** closures and risky weather: tinted panels around busyText */
+  riskBg: string;
+  riskBorder: string;
+  /** "go with care" panels around moderateText */
+  cautionBg: string;
+  cautionBorder: string;
+  /** blue hour */
+  blueHour: string;
+  blueHourText: string;
+  blueBg: string;
+  blueBorder: string;
+  /** the night part of the light timeline, and the text on it */
+  night: string;
+  onNight: string;
   /** a selected segment: inverted colours */
   selectedBg: string;
   selectedText: string;
@@ -79,6 +98,20 @@ export const palettes: Record<ThemeName, Palette> = {
     goldBg: '#2A2216',
     goldBorder: '#8A6630',
     goldText: '#FFCB7D',
+    ok: '#6FD3A6',
+    okText: '#A9EBCB',
+    okBg: '#16261F',
+    okBorder: '#2F5A47',
+    riskBg: '#2A1A19',
+    riskBorder: '#6B3029',
+    cautionBg: '#2A2416',
+    cautionBorder: '#6B5A2A',
+    blueHour: '#6C7FE8',
+    blueHourText: '#B7C3FF',
+    blueBg: '#191C2E',
+    blueBorder: '#3E4A8A',
+    night: '#141729',
+    onNight: '#A7ABB5',
     selectedBg: '#F2EFE9',
     selectedText: '#0B0C0F',
   },
@@ -103,6 +136,20 @@ export const palettes: Record<ThemeName, Palette> = {
     goldBg: '#FFF1DA',
     goldBorder: '#F0B860',
     goldText: '#7A4700',
+    ok: '#1E9E6A',
+    okText: '#0E6B47',
+    okBg: '#E3F5EC',
+    okBorder: '#9FD9BE',
+    riskBg: '#FDECEA',
+    riskBorder: '#F2B3AC',
+    cautionBg: '#FFF5DD',
+    cautionBorder: '#EBC86F',
+    blueHour: '#5468E0',
+    blueHourText: '#3A4BB8',
+    blueBg: '#ECEFFC',
+    blueBorder: '#B3BDF2',
+    night: '#3B4170',
+    onNight: '#FFFFFF',
     selectedBg: '#14161A',
     selectedText: '#FFFFFF',
   },
@@ -190,6 +237,11 @@ export const contrastRequirements: {
   { token: 'busyText', on: 'raised', min: 4.5 },
   { token: 'onAccent', on: 'accent', min: 4.5 },
   { token: 'goldText', on: 'goldBg', min: 4.5 },
+  { token: 'okText', on: 'okBg', min: 4.5 },
+  { token: 'busyText', on: 'riskBg', min: 4.5 },
+  { token: 'moderateText', on: 'cautionBg', min: 4.5 },
+  { token: 'blueHourText', on: 'blueBg', min: 4.5 },
+  { token: 'onNight', on: 'night', min: 4.5 },
   { token: 'selectedText', on: 'selectedBg', min: 7 },
   // marker rings are graphics: 3:1 against the map
   { token: 'quiet', on: 'map', min: 3 },

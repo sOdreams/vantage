@@ -1,11 +1,11 @@
 import { fonts } from '@vantage/tokens';
 import { Pressable, Text, View } from 'react-native';
 import { useTheme } from '@/theme/ThemeProvider';
-import { BellIcon, BookmarkIcon, CompassIcon, PlusIcon, UserIcon } from './icons';
+import { BellIcon, BookmarkIcon, CompassIcon, PlusIcon, UserIcon } from '@/ui/icons';
 
 export const TAB_BAR_HEIGHT = 62;
 
-type Tab = 'explore' | 'saved' | 'alerts' | 'profile';
+export type Tab = 'explore' | 'saved' | 'alerts' | 'profile';
 
 /** Five slots: four destinations and the amber "add a spot" action in the middle. */
 export function TabBar({
