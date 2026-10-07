@@ -69,10 +69,11 @@ export type WeatherAssessment = {
  * deliberately conservative for exposed viewpoints.
  */
 export function assessWeather(w: Weather): WeatherAssessment {
+  const levels: Risk[] = ['safe', 'caution', 'risky'];
   const reasons: string[] = [];
-  let risk: Risk = 'safe';
+  let level = 0;
   const raise = (to: Risk) => {
-    if (to === 'risky' || (to === 'caution' && risk === 'safe')) risk = to;
+    level = Math.max(level, levels.indexOf(to));
   };
 
   if (w.gustKmh >= 60) {
@@ -94,6 +95,7 @@ export function assessWeather(w: Weather): WeatherAssessment {
     reasons.push(`Visibility down to ${w.visibilityKm} km`);
   }
 
+  const risk = levels[level] ?? 'safe';
   const headline =
     risk === 'risky' ? 'Risky right now' : risk === 'caution' ? 'Go with care' : 'Safe to go';
   return { risk, headline, reasons };
