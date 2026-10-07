@@ -7,42 +7,32 @@ import {
   lisbonSpots,
 } from '@vantage/core';
 import { fonts, radius } from '@vantage/tokens';
-import * as Haptics from 'expo-haptics';
-import { useEffect, useMemo, useRef, useState } from 'react';
-import { type FlatList, Pressable, Text, useWindowDimensions, View } from 'react-native';
+import { useRouter } from 'expo-router';
+import { useMemo, useRef, useState } from 'react';
+import { type FlatList, Pressable, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useNow } from '@/hooks/useNow';
 import { useTheme } from '@/theme/ThemeProvider';
+import { tap } from '@/ui/haptics';
 import { CityMap, MAP_HEIGHT, MAP_WIDTH } from './CityMap';
 import { SpotMarker } from './Markers';
 import { CARD_WIDTH, SHEET_HEIGHT, SpotSheet } from './SpotSheet';
-import { TAB_BAR_HEIGHT, TabBar } from './TabBar';
 import { TopBar } from './TopBar';
 
-/** One city for now. Search (Day 3) and real data (Day 5) make this a choice. */
+/** One city for now. Real data (Day 5) makes this a choice. */
 const city = lisbon;
-
-const tap = () => Haptics.selectionAsync().catch(() => {});
-
-/** Re-render every 30 seconds so "Golden hour in N min" stays true. */
-function useNow(intervalMs = 30_000): Date {
-  const [now, setNow] = useState(() => new Date());
-  useEffect(() => {
-    const id = setInterval(() => setNow(new Date()), intervalMs);
-    return () => clearInterval(id);
-  }, [intervalMs]);
-  return now;
-}
 
 /**
  * Explore: the map with every spot, filters on top, and a sheet of cards below.
- * Tap a marker to bring its card into view; tap a card to open the spot (Day 3).
+ * Tap a marker to bring its card into view; tap a card or the top pick to open the spot.
  */
-export function ExploreScreen() {
+export function ExploreScreen({ onOpenAlerts }: { onOpenAlerts: () => void }) {
   const insets = useSafeAreaInsets();
-  const { width, height } = useWindowDimensions();
+  const router = useRouter();
   const { palette } = useTheme();
   const now = useNow();
   const listRef = useRef<FlatList<ExploreSpot>>(null);
+  const [size, setSize] = useState({ width: 390, height: 782 });
 
   const [filter, setFilter] = useState<Filter>('popular');
   const [selectedId, setSelectedId] = useState<string | undefined>();
@@ -51,16 +41,20 @@ export function ExploreScreen() {
   const chip = lightChip(now, city);
   const alerts = lisbonSpots.filter((s) => s.closure || s.risk).length;
 
-  // Layout: tab bar at the bottom, the sheet above it, the map behind everything.
-  const tabBarTotal = TAB_BAR_HEIGHT + insets.bottom;
-  const sheetTop = height - tabBarTotal - SHEET_HEIGHT;
-  const mapHeight = sheetTop + 28; // runs under the sheet's rounded corners
+  // The sheet sits at the bottom of this screen; the map fills the space above and runs under it.
+  const { width, height } = size;
+  const sheetTop = height - SHEET_HEIGHT;
+  const mapHeight = sheetTop + 28;
   const scale = Math.max(width / MAP_WIDTH, mapHeight / MAP_HEIGHT);
   const ox = (width - MAP_WIDTH * scale) / 2;
   const oy = (mapHeight - MAP_HEIGHT * scale) / 2;
   const project = (x: number, y: number) => ({ x: ox + x * scale, y: oy + y * scale });
 
   const featuredId = selectedId ?? view.featuredId;
+  const openSpot = (id: string) => {
+    tap();
+    router.push({ pathname: '/spot/[id]', params: { id } });
+  };
 
   const changeFilter = (f: Filter) => {
     if (f === filter) return;
@@ -70,7 +64,11 @@ export function ExploreScreen() {
     listRef.current?.scrollToOffset({ offset: 0, animated: true });
   };
 
-  const selectSpot = (id: string) => {
+  const pressMarker = (id: string) => {
+    if (id === featuredId) {
+      openSpot(id);
+      return;
+    }
     tap();
     setSelectedId(id);
     const index = view.list.findIndex((s) => s.spot.id === id);
@@ -79,10 +77,11 @@ export function ExploreScreen() {
     }
   };
 
-  const notYet = () => tap();
-
   return (
-    <View style={{ flex: 1, backgroundColor: palette.bg }}>
+    <View
+      style={{ flex: 1, backgroundColor: palette.bg }}
+      onLayout={(e) => setSize(e.nativeEvent.layout)}
+    >
       <Pressable
         onPress={() => setSelectedId(undefined)}
         accessible={false}
@@ -103,7 +102,7 @@ export function ExploreScreen() {
               x={p.x}
               y={p.y}
               featured={item.spot.id === featuredId}
-              onPress={() => selectSpot(item.spot.id)}
+              onPress={() => pressMarker(item.spot.id)}
             />
           );
         })}
@@ -115,28 +114,27 @@ export function ExploreScreen() {
         alerts={alerts}
         filter={filter}
         onFilter={changeFilter}
-        onSearch={notYet}
-        onAlerts={notYet}
+        onSearch={() => {
+          tap();
+          router.push('/search');
+        }}
+        onAlerts={() => {
+          tap();
+          onOpenAlerts();
+        }}
       />
 
-      <Legend top={sheetTop - 84} />
+      <Legend top={sheetTop - 46} />
 
-      <View style={{ position: 'absolute', left: 0, right: 0, top: sheetTop }}>
+      <View style={{ position: 'absolute', left: 0, right: 0, bottom: 0 }}>
         <SpotSheet
           ref={listRef}
           title={view.title}
           subtitle={view.subtitle}
           items={view.list}
           selectedId={selectedId}
-          onPressSpot={selectSpot}
-          onSort={notYet}
-        />
-        <TabBar
-          bottomInset={insets.bottom}
-          active="explore"
-          onPress={(tab) => {
-            if (tab !== 'explore') notYet();
-          }}
+          onPressSpot={openSpot}
+          onSort={() => changeFilter(filter === 'popular' ? 'quiet' : 'popular')}
         />
       </View>
     </View>

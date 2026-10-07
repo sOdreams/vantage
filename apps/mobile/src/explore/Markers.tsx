@@ -2,7 +2,7 @@ import { type CrowdLevel, crowdLabel, type ExploreSpot } from '@vantage/core';
 import { fonts, type Palette } from '@vantage/tokens';
 import { Pressable, Text, View } from 'react-native';
 import { useTheme } from '@/theme/ThemeProvider';
-import { CameraIcon } from './icons';
+import { CameraIcon } from '@/ui/icons';
 
 export function crowdColor(p: Palette, level: CrowdLevel): string {
   return level === 0 ? p.quiet : level === 1 ? p.moderate : p.busy;

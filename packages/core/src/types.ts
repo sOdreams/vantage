@@ -36,3 +36,55 @@ export type Spot = {
   /** A reason not to go today, e.g. "Gusts 72 km/h". */
   risk?: string;
 };
+
+export type Weather = {
+  tempC: number;
+  feelsC: number;
+  condition: string;
+  windKmh: number;
+  gustKmh: number;
+  /** Chance of rain over the next few hours, 0–100. */
+  rainPct: number;
+  visibilityKm: number;
+  cloudPct: number;
+};
+
+export type Route = {
+  mode: 'tram' | 'bus' | 'walk' | 'metro' | 'ferry';
+  title: string;
+  note: string;
+  minutes: number;
+};
+
+export type Fact = { label: string; value: string; tone?: 'good' | 'bad' };
+
+export type Review = {
+  initials: string;
+  name: string;
+  daysAgo: number;
+  light: string;
+  text: string;
+  worthIt: boolean;
+};
+
+export type StatusReport = { when: string; text: string };
+
+export type SpotDetails = {
+  lat: number;
+  lng: number;
+  category: string;
+  ratingsCount: number;
+  photoCount: number;
+  /** Shown in the green or red status card under the title. */
+  status: { title: string; note: string; reports?: StatusReport[] };
+  /** Typical busyness from 07:00 to 23:00, one value per hour, 0–100. */
+  typicalCrowd: number[];
+  shotTip: string;
+  spotNote?: string;
+  standHere?: { text: string; confirmations: number };
+  routes: Route[];
+  facts: Fact[];
+  weather: Weather;
+  worthIt: { pct: number; votes: number };
+  reviews: Review[];
+};

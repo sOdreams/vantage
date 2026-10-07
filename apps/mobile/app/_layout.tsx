@@ -16,6 +16,7 @@ import { StatusBar } from 'expo-status-bar';
 import * as SystemUI from 'expo-system-ui';
 import { useEffect } from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { SavedProvider } from '@/state/SavedProvider';
 import { ThemeProvider, useTheme } from '@/theme/ThemeProvider';
 
 SplashScreen.preventAutoHideAsync().catch(() => {
@@ -37,9 +38,12 @@ function ThemedStack() {
         screenOptions={{
           headerShown: false,
           contentStyle: { backgroundColor: palette.bg },
-          animation: 'fade',
         }}
-      />
+      >
+        <Stack.Screen name="index" />
+        <Stack.Screen name="spot/[id]" />
+        <Stack.Screen name="search" options={{ animation: 'fade_from_bottom' }} />
+      </Stack>
     </>
   );
 }
@@ -66,7 +70,9 @@ export default function RootLayout() {
   return (
     <SafeAreaProvider>
       <ThemeProvider>
-        <ThemedStack />
+        <SavedProvider>
+          <ThemedStack />
+        </SavedProvider>
       </ThemeProvider>
     </SafeAreaProvider>
   );
