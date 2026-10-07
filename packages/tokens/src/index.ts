@@ -65,6 +65,39 @@ export const palettes: Record<ThemeName, Palette> = {
   },
 };
 
+/**
+ * Colours for the city plate (the map). All decorative: they sit one or two
+ * steps off the ground so the map recedes and the spots carry the screen.
+ */
+export type MapPalette = {
+  contour: string;
+  contourMajor: string;
+  street: string;
+  water: string;
+  shore: string;
+  /** de-emphasised marks (safety lens, spots without warnings) */
+  dim: string;
+};
+
+export const mapPalettes: Record<ThemeName, MapPalette> = {
+  darkroom: {
+    contour: '#1F1D1A',
+    contourMajor: '#2A2824',
+    street: '#3A3732',
+    water: '#090A0B',
+    shore: '#33302B',
+    dim: '#5C5852',
+  },
+  gallery: {
+    contour: '#E2DDD2',
+    contourMajor: '#D3CDC0',
+    street: '#C8C1B3',
+    water: '#E4E2DC',
+    shore: '#CDC6B8',
+    dim: '#B0AA9E',
+  },
+};
+
 /** Font family names as registered with expo-font in the app. */
 export const fonts = {
   serifLight: 'Newsreader_300Light',
@@ -72,6 +105,7 @@ export const fonts = {
   serifItalic: 'Newsreader_400Regular_Italic',
   serifMedium: 'Newsreader_500Medium',
   mono: 'IBMPlexMono_400Regular',
+  monoItalic: 'IBMPlexMono_400Regular_Italic',
   monoMedium: 'IBMPlexMono_500Medium',
 } as const;
 

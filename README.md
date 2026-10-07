@@ -8,6 +8,7 @@ A pnpm + Turborepo monorepo:
 apps/
   mobile/            Expo (SDK 57) app, Expo Router, runs in Expo Go
 packages/
+  core/              app logic with no UI: spots, lenses, sun times (+ tests)
   tokens/            design tokens: Darkroom/Gallery palettes, type, spacing (+ tests)
   config/            shared TypeScript config
 docs/adr/            architecture decisions
@@ -70,7 +71,7 @@ pnpm --filter mobile start:tunnel
 ```bash
 pnpm lint          # Biome
 pnpm typecheck     # TypeScript, all packages
-pnpm test          # Vitest (tokens: contrast + theme logic)
+pnpm test          # Vitest (core: lenses + sun times; tokens: contrast + themes)
 pnpm --filter mobile doctor   # checks package versions match Expo SDK 57
 pnpm format        # auto-format everything
 ```

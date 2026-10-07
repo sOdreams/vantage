@@ -1,5 +1,6 @@
 import {
   IBMPlexMono_400Regular,
+  IBMPlexMono_400Regular_Italic,
   IBMPlexMono_500Medium,
 } from '@expo-google-fonts/ibm-plex-mono';
 import {
@@ -50,6 +51,7 @@ export default function RootLayout() {
     Newsreader_400Regular_Italic,
     Newsreader_500Medium,
     IBMPlexMono_400Regular,
+    IBMPlexMono_400Regular_Italic,
     IBMPlexMono_500Medium,
   });
 
