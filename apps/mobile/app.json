@@ -1,0 +1,32 @@
+{
+  "expo": {
+    "name": "Vantage",
+    "slug": "vantage",
+    "scheme": "vantage",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "automatic",
+    "backgroundColor": "#0E0D0B",
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "com.sodreams.vantage"
+    },
+    "android": {
+      "package": "com.sodreams.vantage",
+      "edgeToEdgeEnabled": true
+    },
+    "plugins": [
+      "expo-router",
+      "expo-font",
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#F1EEE7",
+          "dark": {
+            "backgroundColor": "#0E0D0B"
+          }
+        }
+      ]
+    ]
+  }
+}
